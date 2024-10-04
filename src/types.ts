@@ -59,5 +59,10 @@ export type UseUndoable<T> = [
 			behavior?: MutationBehavior,
 			ignoreAction?: boolean
 		) => void
+		setStateStable: (
+			payload: T | ((oldValue: T) => T),
+			behavior?: MutationBehavior,
+			ignoreAction?: boolean
+		) => void
 	}
 ]

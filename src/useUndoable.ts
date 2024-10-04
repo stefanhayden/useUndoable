@@ -1,4 +1,4 @@
-import { useReducer, useCallback, Reducer } from "react"
+import { useReducer, useCallback, Reducer, useRef } from "react"
 
 import { reducer } from "./reducer"
 
@@ -95,6 +95,19 @@ const useUndoable = <T = any>(
 		[state]
 	)
 
+	const setStateRef = useRef(setState)
+	setStateRef.current = setState;
+
+	const setStateStable = useCallback((
+		payload: any,
+
+		// @ts-ignore
+		mutationBehavior: MutationBehavior = options.behavior,
+		ignoreAction: boolean = false
+	) => {
+		return setStateRef.current(payload, mutationBehavior, ignoreAction)
+	}, [setStateRef])
+
 	// In some rare cases, the fact that the above setState
 	// function changes on every render can be problematic.
 	// Since we can't really avoid this (setState uses
@@ -126,6 +139,7 @@ const useUndoable = <T = any>(
 			reset,
 			resetInitialState,
 			static_setState,
+			setStateStable
 		},
 	]
 }
